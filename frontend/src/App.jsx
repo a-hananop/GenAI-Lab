@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Sidebar from './components/Layout/Sidebar'
 import Header from './components/Layout/Header'
@@ -23,12 +24,14 @@ function AnimatedPage({ children }) {
 }
 
 export default function App() {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
   return (
     <BrowserRouter>
       <div className="app-layout">
-        <Sidebar />
+        <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
         <div className="main-content">
-          <Header />
+          <Header onMenuClick={() => setSidebarOpen(true)} />
           <main className="page-content">
             <AnimatePresence mode="wait">
               <Routes>

@@ -1,6 +1,9 @@
 import axios from 'axios'
 
-const api = axios.create({ baseURL: '/api', timeout: 60000 })
+// Use Vercel's environment variable if set, otherwise fallback to Vite proxy for local dev
+const API_URL = import.meta.env.VITE_API_URL || '/api'
+
+const api = axios.create({ baseURL: API_URL, timeout: 60000 })
 
 api.interceptors.response.use(
   r => r.data,

@@ -58,8 +58,16 @@ export default function SimulationRunner() {
 
   const runWithWS = (expId, simType, iters) => {
     return new Promise((resolve, reject) => {
-      const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-      const ws = new WebSocket(`${wsProtocol}//${window.location.host}/api/simulations/ws/${Date.now()}`)
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      let wsUrl = '';
+      if (apiUrl && apiUrl.startsWith('http')) {
+        // Convert http://... to ws://... or https://... to wss://...
+        wsUrl = apiUrl.replace(/^http/, 'ws') + `/simulations/ws/${Date.now()}`
+      } else {
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+        wsUrl = `${wsProtocol}//${window.location.host}/api/simulations/ws/${Date.now()}`
+      }
+      const ws = new WebSocket(wsUrl)
       wsRef.current = ws
       const chartData = []
       setLiveData([]); setProgress(0)

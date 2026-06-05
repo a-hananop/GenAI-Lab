@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { LayoutDashboard, Dna, FlaskConical, Zap, BarChart3, Bot, Database, FileText, Atom } from 'lucide-react'
+import { LayoutDashboard, Dna, FlaskConical, Zap, BarChart3, Bot, Database, FileText, Atom, X } from 'lucide-react'
 import useStore from '../../store/useStore'
 
 const NAV = [
@@ -14,20 +14,17 @@ const NAV = [
   { to: '/reports', icon: <FileText size={18} />, label: 'Research Reports', section: 'OUTPUT' },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, setIsOpen }) {
   const loopRunning = useStore(s => s.loopRunning)
   const location = useLocation()
 
   const sections = [...new Set(NAV.map(n => n.section))]
 
   return (
-    <motion.aside
-      className="sidebar"
-      initial={{ x: -260 }}
-      animate={{ x: 0 }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
-    >
-      <div className="sidebar-logo">
+    <>
+      {isOpen && <div className="sidebar-overlay" onClick={() => setIsOpen(false)}></div>}
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+        <div className="sidebar-logo">
         <div className="sidebar-logo-icon">
           <motion.div
             animate={{ rotate: 360 }}
@@ -41,6 +38,9 @@ export default function Sidebar() {
           <h2>GenAI Lab</h2>
           <span>v1.0.0 · Autonomous</span>
         </div>
+        <button className="mobile-menu-btn btn-icon btn-ghost" onClick={() => setIsOpen(false)} style={{ marginLeft: 'auto', border: 'none' }}>
+          <X size={24} />
+        </button>
       </div>
 
       <nav className="sidebar-nav">
@@ -90,6 +90,7 @@ export default function Sidebar() {
           Core AI Online
         </div>
       </div>
-    </motion.aside>
+    </aside>
+    </>
   )
 }

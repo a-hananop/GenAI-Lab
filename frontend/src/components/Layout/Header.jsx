@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import useStore from '../../store/useStore'
-import { LayoutDashboard, Dna, FlaskConical, Zap, BarChart3, Bot, Database, FileText, BrainCircuit, Activity, CheckCircle2, AlertTriangle, Info } from 'lucide-react'
+import { LayoutDashboard, Dna, FlaskConical, Zap, BarChart3, Bot, Database, FileText, BrainCircuit, Activity, CheckCircle2, AlertTriangle, Info, Menu } from 'lucide-react'
 
 const PAGE_META = {
   '/': { title: 'Dashboard', desc: 'System overview & live metrics', icon: <LayoutDashboard size={24} /> },
@@ -14,7 +14,7 @@ const PAGE_META = {
   '/reports': { title: 'Research Reports', desc: 'AI-generated research summaries', icon: <FileText size={24} /> },
 }
 
-export default function Header() {
+export default function Header({ onMenuClick }) {
   const location = useLocation()
   const toasts = useStore(s => s.toasts)
   const removeToast = useStore(s => s.removeToast)
@@ -24,7 +24,10 @@ export default function Header() {
     <>
       <header className="header">
         <div className="header-title" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{ color: 'var(--violet-light)', display: 'flex' }}>{meta.icon}</div>
+          <button className="mobile-menu-btn btn-icon btn-ghost" onClick={onMenuClick} style={{ border: 'none', padding: 0 }}>
+            <Menu size={24} />
+          </button>
+          <div style={{ color: 'var(--violet-light)', display: 'flex' }} className="header-icon-hide-mobile">{meta.icon}</div>
           <div>
             <h1 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>{meta.title}</h1>
             <p>{meta.desc}</p>
