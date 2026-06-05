@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { Dna, Microscope, Zap, CheckCircle, Brain, Coins, DollarSign, TrendingUp, Globe, Settings, RefreshCw, AlertTriangle, Telescope, CheckCircle2, Rocket, Loader } from 'lucide-react'
 import useStore from '../store/useStore'
 import { StatCard, AnimatedCounter, LoadingCenter } from '../components/UI/index'
 import { ConfidenceChart, DomainChart } from '../components/Charts/index'
@@ -34,21 +35,22 @@ export default function Dashboard() {
         <div style={{ position: 'absolute', top: -40, right: -40, width: 200, height: 200, background: 'radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 70%)', borderRadius: '50%' }} />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
           <div>
-            <h2 style={{ fontSize: 26, fontWeight: 800, marginBottom: 8 }}>
-              🔭 Autonomous AI Research Laboratory
+            <h2 style={{ fontSize: 26, fontWeight: 800, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
+              <Telescope size={28} color="#8B5CF6" /> Autonomous AI Research Laboratory
             </h2>
             <p style={{ color: 'var(--text-muted)', fontSize: 14, maxWidth: 500 }}>
-              GenAI Lab continuously generates hypotheses, designs experiments, runs simulations, and improves itself using Gemini AI + 10 specialized agents.
+              GenAI Lab continuously generates hypotheses, designs experiments, runs simulations, and improves itself using advanced AI + 10 specialized agents.
             </p>
           </div>
           <div style={{ display: 'flex', gap: 12 }}>
             <motion.button
               className={`btn btn-primary btn-lg ${loopRunning ? 'btn-loading' : ''}`}
               onClick={handleLoop} disabled={loopRunning} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+              style={{display: 'flex', alignItems: 'center', gap: 8}}
             >
-              {loopRunning ? '⏳ Running Loop…' : '🚀 Trigger Research Loop'}
+              {loopRunning ? <><Loader size={18} className="spin" /> Running Loop…</> : <><Rocket size={18} /> Trigger Research Loop</>}
             </motion.button>
-            <Link to="/hypotheses" className="btn btn-secondary btn-lg">🧬 Generate Hypothesis</Link>
+            <Link to="/hypotheses" className="btn btn-secondary btn-lg" style={{display: 'flex', alignItems: 'center', gap: 8}}><Dna size={18} /> Generate Hypothesis</Link>
           </div>
         </div>
       </motion.div>
@@ -56,13 +58,13 @@ export default function Dashboard() {
       {/* Stats Grid */}
       <motion.div className="stat-grid" style={{ marginBottom: 32 }} variants={container} initial="hidden" animate="show">
         {[
-          { icon: '🧬', label: 'Total Hypotheses', value: stats?.total_hypotheses || 0, color: '#8B5CF6', gradient: 'linear-gradient(90deg, #8B5CF6, #A855F7)' },
-          { icon: '🔬', label: 'Experiments Designed', value: stats?.total_experiments || 0, color: '#06B6D4', gradient: 'linear-gradient(90deg, #06B6D4, #0EA5E9)' },
-          { icon: '⚡', label: 'Simulations Run', value: stats?.total_simulations || 0, color: '#F59E0B', gradient: 'linear-gradient(90deg, #F59E0B, #EF4444)' },
-          { icon: '✅', label: 'Success Rate', value: `${stats?.success_rate || 0}%`, color: '#10B981', gradient: 'linear-gradient(90deg, #10B981, #06B6D4)' },
-          { icon: '🧠', label: 'Memories Stored', value: stats?.total_memories || 0, color: '#A855F7', gradient: 'linear-gradient(90deg, #A855F7, #EC4899)' },
-          { icon: '🪙', label: 'Total Tokens', value: `${(stats?.total_tokens || 0).toLocaleString()}`, color: '#EAB308', gradient: 'linear-gradient(90deg, #EAB308, #FACC15)' },
-          { icon: '💸', label: 'Est. API Cost', value: `$${stats?.estimated_cost?.toFixed(2) || '0.00'}`, color: '#F43F5E', gradient: 'linear-gradient(90deg, #F43F5E, #FB923C)' },
+          { icon: <Dna size={22} />, label: 'Total Hypotheses', value: stats?.total_hypotheses || 0, color: '#8B5CF6', gradient: 'linear-gradient(90deg, #8B5CF6, #A855F7)' },
+          { icon: <Microscope size={22} />, label: 'Experiments Designed', value: stats?.total_experiments || 0, color: '#06B6D4', gradient: 'linear-gradient(90deg, #06B6D4, #0EA5E9)' },
+          { icon: <Zap size={22} />, label: 'Simulations Run', value: stats?.total_simulations || 0, color: '#F59E0B', gradient: 'linear-gradient(90deg, #F59E0B, #EF4444)' },
+          { icon: <CheckCircle size={22} />, label: 'Success Rate', value: `${stats?.success_rate || 0}%`, color: '#10B981', gradient: 'linear-gradient(90deg, #10B981, #06B6D4)' },
+          { icon: <Brain size={22} />, label: 'Memories Stored', value: stats?.total_memories || 0, color: '#A855F7', gradient: 'linear-gradient(90deg, #A855F7, #EC4899)' },
+          { icon: <Coins size={22} />, label: 'Total Tokens', value: `${(stats?.total_tokens || 0).toLocaleString()}`, color: '#EAB308', gradient: 'linear-gradient(90deg, #EAB308, #FACC15)' },
+          { icon: <DollarSign size={22} />, label: 'Est. API Cost', value: `$${stats?.estimated_cost?.toFixed(2) || '0.00'}`, color: '#F43F5E', gradient: 'linear-gradient(90deg, #F43F5E, #FB923C)' },
         ].map((s, i) => (
           <motion.div key={i} variants={item}>
             <StatCard {...s} />
@@ -75,7 +77,7 @@ export default function Dashboard() {
         <motion.div className="card" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
           <div className="card-header">
             <div>
-              <div className="card-title">📈 Confidence Evolution</div>
+              <div className="card-title" style={{display: 'flex', alignItems: 'center', gap: 8}}><TrendingUp size={20} color="#8B5CF6"/> Confidence Evolution</div>
               <div className="card-subtitle">Hypothesis confidence over time</div>
             </div>
           </div>
@@ -85,7 +87,7 @@ export default function Dashboard() {
         <motion.div className="card" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
           <div className="card-header">
             <div>
-              <div className="card-title">🌐 Research Domains</div>
+              <div className="card-title" style={{display: 'flex', alignItems: 'center', gap: 8}}><Globe size={20} color="#06B6D4"/> Research Domains</div>
               <div className="card-subtitle">Hypothesis distribution by domain</div>
             </div>
           </div>
@@ -96,7 +98,7 @@ export default function Dashboard() {
       {/* System Health + Loop History */}
       <div className="grid-2">
         <motion.div className="card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-          <div className="card-header"><div className="card-title">⚙️ System Health</div></div>
+          <div className="card-header"><div className="card-title" style={{display: 'flex', alignItems: 'center', gap: 8}}><Settings size={20} color="#10B981"/> System Health</div></div>
           {Object.entries(stats?.system_health || {}).map(([k, v]) => (
             <div key={k} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
               <span style={{ fontSize: 13, color: 'var(--text-secondary)', textTransform: 'capitalize' }}>{k.replace(/_/g, ' ')}</span>
@@ -110,19 +112,21 @@ export default function Dashboard() {
 
         <motion.div className="card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
           <div className="card-header">
-            <div className="card-title">🔄 Research Loop History</div>
+            <div className="card-title" style={{display: 'flex', alignItems: 'center', gap: 8}}><RefreshCw size={20} color="#F43F5E"/> Research Loop History</div>
             <Link to="/experiments" className="btn btn-ghost btn-sm">View All</Link>
           </div>
           {loopHistory.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-state-icon">🔄</div>
+              <div className="empty-state-icon" style={{color: 'var(--text-muted)'}}><RefreshCw size={32} /></div>
               <div className="empty-state-title">No loops run yet</div>
               <div className="empty-state-desc">Trigger a research loop to start autonomous experimentation</div>
             </div>
           ) : loopHistory.slice(0, 5).map((l, i) => (
             <div key={l.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
-              <div style={{ width: 32, height: 32, borderRadius: 8, background: l.outcome === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(244,63,94,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>
-                {l.outcome === 'success' ? '✅' : '⚠️'}
+              <div style={{ width: 32, height: 32, borderRadius: 8, background: l.outcome === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(244,63,94,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: l.outcome === 'success' ? '#10B981' : '#F43F5E' }}>
+                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, damping: 10 }}>
+                  {l.outcome === 'success' ? <CheckCircle2 size={18} /> : <AlertTriangle size={18} />}
+                </motion.div>
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 13, fontWeight: 600 }}>Loop #{l.loop_number}</div>

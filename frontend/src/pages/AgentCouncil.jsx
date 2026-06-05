@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Bot, CheckCircle2, AlertTriangle, HelpCircle, Scale, MessageSquare, Loader } from 'lucide-react'
 import useStore from '../store/useStore'
 import { LoadingCenter, ProgressBar } from '../components/UI/index'
 
@@ -17,7 +18,7 @@ export default function AgentCouncil() {
 
   const handleDebate = async () => {
     if (!topic.trim()) { addToast('Enter a debate topic', 'error'); return }
-    addToast('Gemini is simulating agent debate…', 'info')
+    addToast('The AI is simulating agent debate…', 'info')
     try {
       await runDebate(topic, directive)
       addToast('Agent debate completed!', 'success')
@@ -31,8 +32,8 @@ export default function AgentCouncil() {
   return (
     <div className="fade-in">
       <div className="page-header">
-        <div className="page-title"><span className="page-title-icon">🤖</span> Agent Council</div>
-        <p className="page-desc">10 specialized AI agents collaborate, debate, and vote on research strategies using Gemini AI.</p>
+        <div className="page-title"><motion.span animate={{ scale: [1, 1.15, 1], rotate: [0, -5, 5, 0] }} transition={{ repeat: Infinity, duration: 3 }} style={{ display: 'inline-block', marginRight: 12, color: 'var(--violet-light)' }}><Bot size={32} /></motion.span> Agent Council</div>
+        <p className="page-desc">10 specialized AI agents collaborate, debate, and vote on research strategies using advanced AI.</p>
       </div>
 
       {/* Agent Grid */}
@@ -66,8 +67,8 @@ export default function AgentCouncil() {
       {/* Debate Panel */}
       <motion.div className="card" style={{ marginBottom: 28 }} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         <div className="card-header">
-          <div className="card-title">💬 Start Agent Debate</div>
-          <span className="badge badge-violet">Gemini Powered</span>
+          <div className="card-title" style={{display: 'flex', alignItems: 'center', gap: 8}}><MessageSquare size={20} color="#8B5CF6"/> Start Agent Debate</div>
+          <span className="badge badge-violet">AI Powered</span>
         </div>
         <div style={{ display: 'flex', gap: 16, alignItems: 'flex-end', flexWrap: 'wrap' }}>
           <div className="form-group" style={{ flex: 1, minWidth: '300px' }}>
@@ -89,16 +90,16 @@ export default function AgentCouncil() {
       </motion.div>
 
       {/* Debate Results */}
-      {agentDebating && <LoadingCenter message="10 agents are debating via Gemini AI…" />}
+      {agentDebating && <LoadingCenter message="10 agents are debating via AI…" />}
 
       {agentDebate && !agentDebating && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           {/* Vote Summary */}
           <div className="grid-3" style={{ marginBottom: 24 }}>
             {[
-              { label: 'Approve', count: voteApprove, color: '#10B981', icon: '✅' },
-              { label: 'Reject', count: voteReject, color: '#F43F5E', icon: '❌' },
-              { label: 'Abstain', count: voteAbstain, color: '#94a3b8', icon: '🤷' },
+              { label: 'Approve', count: voteApprove, color: '#10B981', icon: <CheckCircle2 size={36} /> },
+              { label: 'Reject', count: voteReject, color: '#F43F5E', icon: <AlertTriangle size={36} /> },
+              { label: 'Abstain', count: voteAbstain, color: '#94a3b8', icon: <HelpCircle size={36} /> },
             ].map(v => (
               <motion.div key={v.label} style={{ padding: 24, background: `${v.color}12`, border: `1px solid ${v.color}30`, borderRadius: 16, textAlign: 'center' }} whileHover={{ y: -4 }}>
                 <div style={{ fontSize: 36, marginBottom: 8 }}>{v.icon}</div>
@@ -111,7 +112,7 @@ export default function AgentCouncil() {
           {/* Consensus Banner */}
           <div className="card" style={{ marginBottom: 24, borderColor: 'rgba(139,92,246,0.4)', background: 'rgba(139,92,246,0.05)' }}>
             <div style={{ display: 'flex', gap: 16 }}>
-              <span style={{ fontSize: 32 }}>⚖️</span>
+              <span style={{ fontSize: 32 }}><Scale size={32} color="var(--violet-light)" /></span>
               <div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--violet-light)', marginBottom: 6 }}>CONSENSUS ({(agentDebate.confidence_score * 100).toFixed(0)}% confidence)</div>
                 <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 8 }}>{agentDebate.consensus}</p>
@@ -122,7 +123,7 @@ export default function AgentCouncil() {
 
           {/* Debate Feed */}
           <div className="card">
-            <div className="card-title" style={{ marginBottom: 20 }}>💬 Debate Feed — Topic: {agentDebate.topic}</div>
+            <div className="card-title" style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}><MessageSquare size={20} color="#8B5CF6"/> Debate Feed — Topic: {agentDebate.topic}</div>
             {agentDebate.debate_rounds?.map((r, i) => (
               <motion.div key={i} className="debate-message" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.07 }}>
                 <div className="debate-avatar" style={{ background: `${r.color || '#8B5CF6'}20` }}>
@@ -134,7 +135,7 @@ export default function AgentCouncil() {
                   <div className="debate-agent" style={{ color: r.color || 'var(--violet-light)' }}>{r.agent}</div>
                   <div className="debate-text">{r.message}</div>
                   <div className="debate-meta">
-                    <span className={`vote-chip vote-${r.vote}`}>{r.vote === 'approve' ? '✅' : r.vote === 'reject' ? '❌' : '🤷'} {r.vote}</span>
+                    <span className={`vote-chip vote-${r.vote}`}>{r.vote === 'approve' ? <CheckCircle2 size={12} style={{marginRight: 4}}/> : r.vote === 'reject' ? <AlertTriangle size={12} style={{marginRight: 4}}/> : <HelpCircle size={12} style={{marginRight: 4}}/>} {r.vote}</span>
                     <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Confidence: {(r.confidence * 100).toFixed(0)}%</span>
                   </div>
                 </div>

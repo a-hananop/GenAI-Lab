@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import ReactMarkdown from 'react-markdown'
 import { motion } from 'framer-motion'
+import { FileText, Printer, Dna, Microscope, Zap, CheckCircle2, Loader, Bot } from 'lucide-react'
 import { reportsAPI } from '../services/api'
 import { LoadingCenter } from '../components/UI/index'
 import useStore from '../store/useStore'
@@ -12,7 +14,7 @@ export default function ResearchReports() {
   const handleGenerate = async () => {
     setLoading(true)
     try {
-      addToast('Gemini is generating your research report…', 'info')
+      addToast('The AI is generating your research report…', 'info')
       const data = await reportsAPI.generate()
       setReport(data)
       addToast('Report generated!', 'success')
@@ -23,44 +25,44 @@ export default function ResearchReports() {
   return (
     <div className="fade-in">
       <div className="page-header">
-        <div className="page-title"><span className="page-title-icon">📄</span> Research Reports</div>
-        <p className="page-desc">AI-generated research reports summarizing hypotheses, experiments, and findings using Gemini.</p>
+        <div className="page-title"><motion.span animate={{ scale: [1, 1.15, 1], rotate: [0, -5, 5, 0] }} transition={{ repeat: Infinity, duration: 3 }} style={{ display: 'inline-block', marginRight: 12, color: 'var(--violet-light)' }}><FileText size={32} /></motion.span> Research Reports</div>
+        <p className="page-desc">AI-generated research reports summarizing hypotheses, experiments, and findings using advanced AI.</p>
       </div>
 
       <motion.div className="card" style={{ marginBottom: 28 }} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <div className="card-title">📄 Generate Research Report</div>
-            <div className="card-subtitle">Gemini AI synthesizes all research data into a structured report</div>
+            <div className="card-title" style={{display: 'flex', alignItems: 'center', gap: 8}}><FileText size={20} color="#8B5CF6"/> Generate Research Report</div>
+            <div className="card-subtitle">The AI synthesizes all research data into a structured report</div>
           </div>
           <div style={{ display: 'flex', gap: '12px' }}>
-            <motion.button className={`btn btn-primary btn-lg ${loading ? 'btn-loading' : ''}`} onClick={handleGenerate} disabled={loading} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              {loading ? '⏳ Generating…' : '📄 Generate Report'}
+            <motion.button className={`btn btn-primary btn-lg ${loading ? 'btn-loading' : ''}`} style={{display: 'flex', alignItems: 'center', gap: 8}} onClick={handleGenerate} disabled={loading} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              {loading ? <><Loader size={18} className="spin" /> Generating…</> : <><FileText size={18} /> Generate Report</>}
             </motion.button>
             {report && (
-              <motion.button className="btn btn-ghost btn-lg" onClick={() => window.print()} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                🖨️ Export PDF
+              <motion.button className="btn btn-ghost btn-lg" style={{display: 'flex', alignItems: 'center', gap: 8}} onClick={() => window.print()} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Printer size={18} /> Export PDF
               </motion.button>
             )}
           </div>
         </div>
       </motion.div>
 
-      {loading && <LoadingCenter message="Gemini is analyzing all research data and generating report…" />}
+      {loading && <LoadingCenter message="The AI is analyzing all research data and generating report…" />}
 
       {report && !loading && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <div style={{ padding: '20px 28px', background: 'linear-gradient(135deg, rgba(139,92,246,0.12), rgba(6,182,212,0.06))', border: '1px solid rgba(139,92,246,0.3)', borderRadius: 20, marginBottom: 28 }}>
-            <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 6 }}>📄 {report.title}</div>
+            <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 10 }}><FileText size={24} color="#8B5CF6"/> {report.title}</div>
             <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Generated: {new Date(report.generated_at).toLocaleString()} · Period: {report.period}</div>
           </div>
 
           <div className="grid-4" style={{ marginBottom: 28 }}>
             {[
-              { label: 'Hypotheses', value: report.statistics?.total_hypotheses, color: '#8B5CF6', icon: '🧬' },
-              { label: 'Experiments', value: report.statistics?.total_experiments, color: '#06B6D4', icon: '🔬' },
-              { label: 'Simulations', value: report.statistics?.completed_simulations, color: '#10B981', icon: '⚡' },
-              { label: 'Approval Rate', value: `${report.statistics?.approval_rate}%`, color: '#F59E0B', icon: '✅' },
+              { label: 'Hypotheses', value: report.statistics?.total_hypotheses, color: '#8B5CF6', icon: <Dna size={28} /> },
+              { label: 'Experiments', value: report.statistics?.total_experiments, color: '#06B6D4', icon: <Microscope size={28} /> },
+              { label: 'Simulations', value: report.statistics?.completed_simulations, color: '#10B981', icon: <Zap size={28} /> },
+              { label: 'Approval Rate', value: `${report.statistics?.approval_rate}%`, color: '#F59E0B', icon: <CheckCircle2 size={28} /> },
             ].map((s, i) => (
               <motion.div key={i} style={{ padding: 20, background: 'var(--bg-card)', border: `1px solid ${s.color}30`, borderRadius: 16 }}
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}>
@@ -73,7 +75,7 @@ export default function ResearchReports() {
 
           <div className="grid-2" style={{ marginBottom: 28 }}>
             <div className="card">
-              <div className="card-title" style={{ marginBottom: 16 }}>🧬 Top Hypotheses</div>
+              <div className="card-title" style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}><Dna size={20} color="#8B5CF6"/> Top Hypotheses</div>
               {report.top_hypotheses?.map((h, i) => (
                 <div key={h.id} style={{ padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
@@ -86,7 +88,7 @@ export default function ResearchReports() {
             </div>
 
             <div className="card">
-              <div className="card-title" style={{ marginBottom: 16 }}>🔬 Recent Experiments</div>
+              <div className="card-title" style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}><Microscope size={20} color="#06B6D4"/> Recent Experiments</div>
               {report.recent_experiments?.map((e, i) => (
                 <div key={e.id} style={{ padding: '12px 0', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
@@ -100,8 +102,10 @@ export default function ResearchReports() {
           </div>
 
           <div className="card" style={{ borderColor: 'rgba(139,92,246,0.3)' }}>
-            <div className="card-title" style={{ marginBottom: 16 }}>🤖 AI Research Narrative (Gemini)</div>
-            <div style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.9, whiteSpace: 'pre-wrap' }}>{report.narrative}</div>
+            <div className="card-title" style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}><Bot size={20} color="#10B981"/> AI Research Narrative (AI)</div>
+            <div className="markdown-pro" style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.9 }}>
+              <ReactMarkdown>{report.narrative}</ReactMarkdown>
+            </div>
           </div>
         </motion.div>
       )}
@@ -109,7 +113,7 @@ export default function ResearchReports() {
       {!report && !loading && (
         <div className="card">
           <div className="empty-state">
-            <div className="empty-state-icon">📄</div>
+            <div className="empty-state-icon" style={{color: 'var(--text-muted)'}}><FileText size={32} /></div>
             <div className="empty-state-title">No report generated yet</div>
             <div className="empty-state-desc">Click "Generate Report" to create an AI-powered research summary of all your lab activity</div>
           </div>

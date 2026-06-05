@@ -1,6 +1,6 @@
 import uuid, random, datetime
 from typing import Dict, Any, List, Optional
-from services.gemini_service import generate_json_with_gemini, SYSTEM_SCIENTIST
+from services.groq_service import generate_json_with_llm, SYSTEM_SCIENTIST
 from database.db import SessionLocal, ExperimentDB, HypothesisDB
 
 METHODOLOGIES = ["A/B Test","Bayesian Optimization","Monte Carlo Simulation",
@@ -20,10 +20,12 @@ async def design_experiment(hypothesis_id: str, methodology: Optional[str] = Non
     if not methodology:
         methodology = random.choice(METHODOLOGIES)
 
-    prompt = f"""Design a complete experiment for: "{hyp_text}"
+    prompt = f"""Design a highly rigorous, complete scientific experiment for the following hypothesis: "{hyp_text}"
 Methodology: {methodology}, Domain: {domain}
 
-Return JSON:
+You MUST explicitly define robust control groups, test groups, isolated variables, measurable metrics, and precise statistical success thresholds.
+
+Return JSON EXACTLY matching this structure:
 {{
   "name": "Short descriptive experiment name",
   "objective": "Clear experiment objective",
@@ -40,7 +42,7 @@ Return JSON:
   "reproducibility_score": 0.85
 }}"""
 
-    data = await generate_json_with_gemini(prompt, SYSTEM_SCIENTIST)
+    data = await generate_json_with_llm(prompt, SYSTEM_SCIENTIST)
     if not data or "name" not in data:
         data = _fallback_experiment(methodology)
 
@@ -81,7 +83,7 @@ Return JSON:
             "failure_conditions": exp.failure_conditions,
             "time_horizon": exp.time_horizon, "required_resources": exp.required_resources,
             "agent_discussion": discussion,
-            "created_at": datetime.datetime.utcnow().isoformat(),
+            "created_at": datetime.datetime.utcnow().isoformat() + "Z",
         }
     finally:
         db.close()
@@ -96,7 +98,7 @@ def _make_agent_discussion() -> List[Dict]:
         ("Data Scientist","Metrics are well-defined. Statistical power is sufficient."),
         ("Decision-Making Agent","Experiment approved for simulation execution."),
     ]
-    return [{"agent":a,"message":m,"timestamp":datetime.datetime.utcnow().isoformat(),"confidence":round(random.uniform(0.65,0.95),2)} for a,m in agents]
+    return [{"agent":a,"message":m,"timestamp":datetime.datetime.utcnow().isoformat() + "Z","confidence":round(random.uniform(0.65,0.95),2)} for a,m in agents]
 
 
 def _fallback_experiment(methodology: str) -> Dict[str, Any]:
@@ -125,8 +127,8 @@ async def get_experiments_list() -> List[Dict[str, Any]]:
             "failure_conditions": r.failure_conditions or [],"time_horizon": r.time_horizon,
             "required_resources": r.required_resources or [],"results": r.results,
             "agent_discussion": r.agent_discussion or [],
-            "created_at": r.created_at.isoformat() if r.created_at else None,
-            "updated_at": r.updated_at.isoformat() if r.updated_at else None,
+            "created_at": r.created_at.isoformat() + "Z" if r.created_at else None,
+            "updated_at": r.updated_at.isoformat() + "Z" if r.updated_at else None,
         } for r in rows]
     finally:
         db.close()

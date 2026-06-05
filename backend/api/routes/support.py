@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
-from services.gemini_service import generate_with_gemini
+from services.groq_service import generate_with_llm
 
 router = APIRouter(prefix="/api/support", tags=["Support Bot"])
 
@@ -34,7 +34,7 @@ A: It stores semantic memories and concepts over time, acting as the long-term k
 @router.post("/chat")
 async def chat_with_support(req: ChatRequest):
     try:
-        # Construct the conversation history to give Gemini context
+        # Construct the conversation history to give Groq context
         context = SUPPORT_BOT_CONTEXT + "\n\nConversation History:\n"
         for msg in req.history:
             role = "User" if msg.role == "user" else "Lab Assistant"
@@ -43,7 +43,7 @@ async def chat_with_support(req: ChatRequest):
         # Add the current prompt
         prompt = f"User: {req.message}\nLab Assistant: "
         
-        response_text = await generate_with_gemini(prompt=prompt, system_context=context)
+        response_text = await generate_with_llm(prompt=prompt, system_context=context)
         return {"response": response_text.strip()}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

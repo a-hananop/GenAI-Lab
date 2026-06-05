@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from database.db import SessionLocal, HypothesisDB, ExperimentDB, SimulationDB
-from services.gemini_service import generate_with_gemini, SYSTEM_SCIENTIST
+from services.groq_service import generate_with_llm, SYSTEM_SCIENTIST
 import datetime
 
 router = APIRouter(prefix="/api/reports", tags=["reports"])
@@ -17,8 +17,8 @@ async def generate_report():
         recent_e = db.query(ExperimentDB).order_by(ExperimentDB.created_at.desc()).limit(5).all()
 
         summary = f"Hypotheses: {total_h}, Experiments: {total_e}, Completed Simulations: {total_s}. Top topics: {', '.join([h.hypothesis[:40] for h in recent_h[:3]])}"
-        prompt = f"Generate a structured AI research report for GenAI Lab. Stats: {summary}. Include executive summary, key findings, top hypothesis analysis, and recommended next steps. Be scientific and specific."
-        narrative = await generate_with_gemini(prompt, SYSTEM_SCIENTIST)
+        prompt = f"Generate a structured AI research report for GenAI Lab. Stats: {summary}. The user explicitly requested to make sure there is a specific section for EACH category. You MUST include dedicated markdown headings for each of the following categories: 1. Hypotheses, 2. Experiments, 3. Simulations, 4. Agent Debates. Aggregate the context into a comprehensive, professional executive summary."
+        narrative = await generate_with_llm(prompt, SYSTEM_SCIENTIST)
 
         return {
             "generated_at":datetime.datetime.utcnow().isoformat(),

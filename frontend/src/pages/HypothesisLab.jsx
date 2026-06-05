@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Dna, Sparkles, CheckCircle2, AlertTriangle, Microscope, Loader } from 'lucide-react'
 import useStore from '../store/useStore'
 import { RiskBadge, StatusBadge, DomainBadge, ConfidenceBar, LoadingCenter } from '../components/UI/index'
 
@@ -16,7 +17,7 @@ export default function HypothesisLab() {
 
   const handleGenerate = async () => {
     try {
-      addToast('Gemini is generating hypothesis…', 'info')
+      addToast('The AI is generating hypothesis…', 'info')
       const h = await generateHypothesis(form)
       addToast('New hypothesis generated!', 'success')
     } catch (e) { addToast('Generation failed: ' + e, 'error') }
@@ -45,15 +46,14 @@ export default function HypothesisLab() {
   return (
     <div className="fade-in">
       <div className="page-header">
-        <div className="page-title"><span className="page-title-icon">🧬</span> Hypothesis Lab</div>
-        <p className="page-desc">Generate novel scientific hypotheses powered by Gemini AI. Each hypothesis is evaluated by 10 specialized agents.</p>
+        <div className="page-title"><motion.span animate={{ scale: [1, 1.15, 1], rotate: [0, -5, 5, 0] }} transition={{ repeat: Infinity, duration: 3 }} style={{ display: 'inline-block', marginRight: 12, color: 'var(--violet-light)' }}><Dna size={32} /></motion.span> Hypothesis Lab</div>
+        <p className="page-desc">Generate novel scientific hypotheses powered by advanced AI. Each hypothesis is evaluated by 10 specialized agents.</p>
       </div>
 
       {/* Generator Panel */}
       <motion.div className="card" style={{ marginBottom: 28 }} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         <div className="card-header">
-          <div className="card-title">✨ Generate New Hypothesis</div>
-          <span className="badge badge-violet">Gemini 1.5 Flash</span>
+          <div className="card-title" style={{display: 'flex', alignItems: 'center', gap: 8}}><Sparkles size={20} color="#EAB308"/> Generate New Hypothesis</div>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 2fr', gap: 16, marginBottom: 16 }}>
           <div className="form-group">
@@ -71,8 +71,8 @@ export default function HypothesisLab() {
             <input className="form-input" placeholder="e.g. focus on efficiency improvements" value={form.context} onChange={e => setForm(f => ({ ...f, context: e.target.value }))} />
           </div>
         </div>
-        <motion.button className={`btn btn-primary ${hypGenerating ? 'btn-loading' : ''}`} onClick={handleGenerate} disabled={hypGenerating} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-          {hypGenerating ? '⏳ Generating with Gemini…' : '🧬 Generate Hypothesis'}
+        <motion.button className={`btn btn-primary ${hypGenerating ? 'btn-loading' : ''}`} style={{display: 'flex', alignItems: 'center', gap: 8}} onClick={handleGenerate} disabled={hypGenerating} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          {hypGenerating ? <><Loader size={18} className="spin" /> Generating with AI…</> : <><Dna size={18} /> Generate Hypothesis</>}
         </motion.button>
       </motion.div>
 
@@ -90,7 +90,7 @@ export default function HypothesisLab() {
           {filtered.length === 0 ? (
             <div className="card">
               <div className="empty-state">
-                <div className="empty-state-icon">🧬</div>
+                <div className="empty-state-icon" style={{color: 'var(--text-muted)'}}><Dna size={32} /></div>
                 <div className="empty-state-title">No hypotheses yet</div>
                 <div className="empty-state-desc">Click "Generate Hypothesis" to create your first AI-powered research hypothesis</div>
               </div>
@@ -119,13 +119,13 @@ export default function HypothesisLab() {
                 </div>
                 {h.status === 'pending' && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flexShrink: 0 }} onClick={e => e.stopPropagation()}>
-                    <button className="btn btn-success btn-sm" onClick={() => handleApprove(h.id)}>✅ Approve</button>
-                    <button className="btn btn-danger btn-sm" onClick={() => handleReject(h.id)}>❌ Reject</button>
-                    <button className="btn btn-secondary btn-sm" onClick={() => handleDesignExp(h.id)}>🔬 Design Exp</button>
+                    <button className="btn btn-success btn-sm" style={{display: 'flex', alignItems: 'center', gap: 6}} onClick={() => handleApprove(h.id)}><CheckCircle2 size={14} /> Approve</button>
+                    <button className="btn btn-danger btn-sm" style={{display: 'flex', alignItems: 'center', gap: 6}} onClick={() => handleReject(h.id)}><AlertTriangle size={14} /> Reject</button>
+                    <button className="btn btn-secondary btn-sm" style={{display: 'flex', alignItems: 'center', gap: 6}} onClick={() => handleDesignExp(h.id)}><Microscope size={14} /> Design Exp</button>
                   </div>
                 )}
                 {h.status === 'approved' && (
-                  <button className="btn btn-secondary btn-sm" style={{ flexShrink: 0 }} onClick={e => { e.stopPropagation(); handleDesignExp(h.id) }}>🔬 Design Exp</button>
+                  <button className="btn btn-secondary btn-sm" style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 6 }} onClick={e => { e.stopPropagation(); handleDesignExp(h.id) }}><Microscope size={14} /> Design Exp</button>
                 )}
               </div>
 

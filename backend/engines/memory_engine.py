@@ -5,7 +5,8 @@ from database.db import SessionLocal, MemoryDB
 
 def _keywords(text: str) -> List[str]:
     stop = {"the","a","an","is","in","of","and","to","for","with","that","this","it","be","are","was","will"}
-    return list(set(w for w in text.lower().replace(","," ").replace("."," ").split() if len(w)>3 and w not in stop))[:15]
+    words = [w for w in text.lower().replace(","," ").replace("."," ").split() if len(w)>3 and w not in stop]
+    return list(dict.fromkeys(words))[:50]
 
 
 def _cosine(k1, k2):
@@ -35,7 +36,8 @@ async def search_memory(query: str, limit: int = 10):
     db=SessionLocal()
     try:
         mems=db.query(MemoryDB).order_by(MemoryDB.created_at.desc()).all()
-        scored=sorted([(round(_cosine(qkw,m.embedding_keywords or []),4),m) for m in mems],key=lambda x:x[0],reverse=True)
+        scored=[(round(_cosine(qkw,m.embedding_keywords or []),4),m) for m in mems]
+        scored=sorted([x for x in scored if x[0] > 0], key=lambda x:x[0], reverse=True)
         return [{"id":m.id,"memory_type":m.memory_type,"title":m.title,"content":m.content,
                  "embedding_keywords":m.embedding_keywords or [],"related_ids":m.related_ids or [],
                  "confidence_at_time":m.confidence_at_time,"outcome":m.outcome,"tags":m.tags or [],

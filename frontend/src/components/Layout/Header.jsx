@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import useStore from '../../store/useStore'
-import { LayoutDashboard, Dna, FlaskConical, Zap, BarChart3, Bot, Database, FileText, BrainCircuit, Activity } from 'lucide-react'
+import { LayoutDashboard, Dna, FlaskConical, Zap, BarChart3, Bot, Database, FileText, BrainCircuit, Activity, CheckCircle2, AlertTriangle, Info } from 'lucide-react'
 
 const PAGE_META = {
   '/': { title: 'Dashboard', desc: 'System overview & live metrics', icon: <LayoutDashboard size={24} /> },
@@ -53,7 +53,7 @@ export default function Header() {
               style={{ minWidth: 280, maxWidth: 400, cursor: 'pointer', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}
               onClick={() => removeToast(t.id)}
             >
-              <span>{t.type === 'success' ? '✅' : t.type === 'error' ? '❌' : 'ℹ️'}</span>
+              <span>{t.type === 'success' ? <CheckCircle2 size={16} /> : t.type === 'error' ? <AlertTriangle size={16} /> : <Info size={16} />}</span>
               <span>{t.msg}</span>
             </motion.div>
           ))}

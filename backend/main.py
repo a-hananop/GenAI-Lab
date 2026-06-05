@@ -3,6 +3,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dotenv import load_dotenv
 load_dotenv()
 
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database.db import init_db
@@ -16,14 +17,20 @@ from api.routes.dashboard import router as dash_r, router_loop
 from api.routes.reports import router as rep_r
 from api.routes.support import router as sup_r
 
-app = FastAPI(title="GenAI Lab API", description="Autonomous AI Experimentation Engine", version="1.0.0")
-
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
-
-@app.on_event("startup")
-async def startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     init_db()
     print("✅ GenAI Lab Backend Ready on http://localhost:8000")
+    yield
+
+app = FastAPI(
+    title="GenAI Lab API", 
+    description="Autonomous AI Experimentation Engine", 
+    version="1.0.0",
+    lifespan=lifespan
+)
+
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 @app.get("/api/health")
 async def health():

@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { motion } from 'framer-motion'
+import { Database, Search, Brain, CheckCircle2, AlertTriangle, Network, Microscope, Dna, BarChart2, RefreshCw, Loader } from 'lucide-react'
 import useStore from '../store/useStore'
 import { LoadingCenter } from '../components/UI/index'
 import ForceGraph2D from 'react-force-graph-2d'
@@ -9,8 +10,20 @@ export default function MemoryVault() {
   const [query, setQuery] = useState('')
   const [tab, setTab] = useState('all')
   const [searching, setSearching] = useState(false)
+  const containerRef = useRef(null)
+  const [graphWidth, setGraphWidth] = useState(800)
 
   useEffect(() => { fetchMemories(); fetchGraph() }, [])
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const observer = new ResizeObserver(entries => {
+        if (entries[0]) setGraphWidth(entries[0].contentRect.width)
+      })
+      observer.observe(containerRef.current)
+      return () => observer.disconnect()
+    }
+  }, [knowledgeGraph])
 
   const handleSearch = async () => {
     if (!query.trim()) { fetchMemories(); return }
@@ -25,21 +38,21 @@ export default function MemoryVault() {
   const types = ['all', ...new Set(memories.map(m => m.memory_type))]
   const graph = knowledgeGraph
   const outcomeColor = { success: '#10B981', failure: '#F43F5E', neutral: '#94a3b8' }
-  const typeIcon = { experiment: '🔬', hypothesis: '🧬', analysis: '📊', loop: '🔄' }
+  const typeIcon = { experiment: <Microscope size={22} />, hypothesis: <Dna size={22} />, analysis: <BarChart2 size={22} />, loop: <RefreshCw size={22} /> }
 
   return (
     <div className="fade-in">
       <div className="page-header">
-        <div className="page-title"><span className="page-title-icon">🧠</span> Memory Vault</div>
+        <div className="page-title"><motion.span animate={{ scale: [1, 1.15, 1], rotate: [0, -5, 5, 0] }} transition={{ repeat: Infinity, duration: 3 }} style={{ display: 'inline-block', marginRight: 12, color: 'var(--violet-light)' }}><Database size={32} /></motion.span> Memory Vault</div>
         <p className="page-desc">Long-term research memory with semantic search and knowledge graph.</p>
       </div>
 
       <div className="grid-4" style={{ marginBottom: 28 }}>
         {[
-          { label: 'Total Memories', value: memories.length, color: '#8B5CF6', icon: '🧠' },
-          { label: 'Successes', value: memories.filter(m => m.outcome === 'success').length, color: '#10B981', icon: '✅' },
-          { label: 'Failures', value: memories.filter(m => m.outcome === 'failure').length, color: '#F43F5E', icon: '⚠️' },
-          { label: 'Graph Nodes', value: graph?.total_nodes || 0, color: '#06B6D4', icon: '🕸️' },
+          { label: 'Total Memories', value: memories.length, color: '#8B5CF6', icon: <Brain size={22} /> },
+          { label: 'Successes', value: memories.filter(m => m.outcome === 'success').length, color: '#10B981', icon: <CheckCircle2 size={22} /> },
+          { label: 'Failures', value: memories.filter(m => m.outcome === 'failure').length, color: '#F43F5E', icon: <AlertTriangle size={22} /> },
+          { label: 'Graph Nodes', value: graph?.total_nodes || 0, color: '#06B6D4', icon: <Network size={22} /> },
         ].map((s, i) => (
           <motion.div key={i} style={{ padding: 20, background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16, display: 'flex', alignItems: 'center', gap: 14 }}
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} whileHover={{ y: -3 }}>
@@ -56,8 +69,8 @@ export default function MemoryVault() {
         <div style={{ display: 'flex', gap: 12 }}>
           <input className="form-input" style={{ flex: 1 }} placeholder="🔍 Semantic search memories…"
             value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSearch()} />
-          <button className={`btn btn-primary ${searching ? 'btn-loading' : ''}`} onClick={handleSearch} disabled={searching}>
-            {searching ? '⏳' : '🔍 Search'}
+          <button className={`btn btn-primary ${searching ? 'btn-loading' : ''}`} style={{display: 'flex', alignItems: 'center', gap: 8}} onClick={handleSearch} disabled={searching}>
+            {searching ? <><Loader size={18} className="spin" /></> : <><Search size={18} /> Search</>}
           </button>
           {query && <button className="btn btn-ghost" onClick={() => { setQuery(''); fetchMemories() }}>✕ Clear</button>}
         </div>
@@ -66,12 +79,13 @@ export default function MemoryVault() {
       {graph && graph.total_nodes > 0 && (
         <motion.div className="card" style={{ marginBottom: 24, borderColor: 'rgba(6,182,212,0.3)' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <div className="card-header">
-            <div className="card-title">🕸️ Knowledge Graph</div>
+            <div className="card-title" style={{display: 'flex', alignItems: 'center', gap: 8}}><Network size={20} color="#06B6D4"/> Knowledge Graph</div>
             <span className="badge badge-cyan">{graph.total_nodes} nodes · {graph.total_edges} edges</span>
           </div>
-          <div style={{ height: 400, borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.2)' }}>
+          <div ref={containerRef} style={{ height: 400, borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.2)' }}>
             <ForceGraph2D
               graphData={{ nodes: graph.nodes.map(n => ({...n, name: n.label})), links: graph.edges }}
+              width={graphWidth}
               height={400}
               nodeColor={n => outcomeColor[n.outcome] || '#8B5CF6'}
               nodeLabel="name"
@@ -94,7 +108,7 @@ export default function MemoryVault() {
       {memLoading ? <LoadingCenter message="Loading memory vault…" /> : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {filtered.length === 0 ? (
-            <div className="card"><div className="empty-state"><div className="empty-state-icon">🧠</div><div className="empty-state-title">Memory vault is empty</div><div className="empty-state-desc">Run research loops to populate long-term memory</div></div></div>
+            <div className="card"><div className="empty-state"><div className="empty-state-icon" style={{color: 'var(--text-muted)'}}>{query ? <Search size={32}/> : <Brain size={32}/>}</div><div className="empty-state-title">{query ? 'No matching memories found' : 'Memory vault is empty'}</div><div className="empty-state-desc">{query ? 'Try different keywords or clear the search.' : 'Run research loops to populate long-term memory'}</div></div></div>
           ) : filtered.map((mem, i) => (
             <motion.div key={mem.id} className="card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
               <div style={{ display: 'flex', gap: 14 }}>

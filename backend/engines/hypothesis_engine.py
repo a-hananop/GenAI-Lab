@@ -1,6 +1,6 @@
 import uuid, random, datetime
 from typing import Dict, Any, List, Optional
-from services.gemini_service import generate_json_with_gemini, SYSTEM_SCIENTIST
+from services.groq_service import generate_json_with_llm, SYSTEM_SCIENTIST
 from database.db import SessionLocal, HypothesisDB
 try:
     from duckduckgo_search import DDGS
@@ -49,7 +49,7 @@ Return JSON with exactly these fields:
   "dependencies": ["dependency1", "dependency2"]
 }}"""
 
-    data = await generate_json_with_gemini(prompt, SYSTEM_SCIENTIST)
+    data = await generate_json_with_llm(prompt, SYSTEM_SCIENTIST)
     if not data or "hypothesis" not in data:
         data = _fallback_hypothesis(domain)
 

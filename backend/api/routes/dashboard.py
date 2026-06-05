@@ -38,7 +38,7 @@ async def stats():
             "total_tokens": total_tokens,
             "estimated_cost": estimated_cost,
             "system_health":{"hypothesis_engine":"online","experiment_engine":"online",
-                             "simulation_engine":"online","memory_engine":"online","gemini_api":"connected"}
+                             "simulation_engine":"online","memory_engine":"online","groq_api":"connected"}
         }
     finally:
         db.close()

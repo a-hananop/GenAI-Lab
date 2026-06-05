@@ -1,7 +1,7 @@
 import math, random
 from typing import Dict, Any, List
 from database.db import SessionLocal, ExperimentDB, SimulationDB
-from services.gemini_service import generate_with_gemini, SYSTEM_SCIENTIST
+from services.groq_service import generate_with_llm, SYSTEM_SCIENTIST
 
 
 def _mean(d): return sum(d)/len(d) if d else 0.0
@@ -72,6 +72,7 @@ async def analyze_experiment(experiment_id: str) -> Dict[str, Any]:
 async def _explain(name, tm, cm, pv):
     prompt = f"Provide a 2-sentence XAI explanation for: Experiment '{name}', treatment={tm:.4f}, control={cm:.4f}, p={pv}. What drove the difference?"
     try:
-        return await generate_with_gemini(prompt, SYSTEM_SCIENTIST)
+        insights = await generate_with_llm(prompt, SYSTEM_SCIENTIST)
+        return insights
     except Exception:
         return f"The treatment outperformed control by {round((tm-cm)*100,1)}%. Statistical significance confirmed (p={pv})."

@@ -1,6 +1,6 @@
 import random, datetime
 from typing import Dict, Any, List
-from services.gemini_service import generate_json_with_gemini, SYSTEM_SCIENTIST
+from services.groq_service import generate_json_with_llm, SYSTEM_SCIENTIST
 
 AGENTS = [
     {"id":"hypothesis_agent","name":"Hypothesis Agent","role":"Generates novel scientific hypotheses","icon":"🧬","color":"#8B5CF6"},
@@ -43,7 +43,7 @@ Return JSON:
   "confidence_score": 0.82
 }}"""
 
-    data = await generate_json_with_gemini(prompt, SYSTEM_SCIENTIST)
+    data = await generate_json_with_llm(prompt, SYSTEM_SCIENTIST)
     if not data or "debate_rounds" not in data:
         data = _fallback_debate(topic)
 
