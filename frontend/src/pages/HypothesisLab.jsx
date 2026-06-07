@@ -55,7 +55,7 @@ export default function HypothesisLab() {
         <div className="card-header">
           <div className="card-title" style={{display: 'flex', alignItems: 'center', gap: 8}}><Sparkles size={20} color="#EAB308"/> Generate New Hypothesis</div>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 2fr', gap: 16, marginBottom: 16 }}>
+        <div className="hyp-form-grid">
           <div className="form-group">
             <label className="form-label">Research Domain</label>
             <select className="form-select" value={form.domain} onChange={e => setForm(f => ({ ...f, domain: e.target.value }))}>

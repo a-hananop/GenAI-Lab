@@ -71,19 +71,19 @@ export default function AgentCouncil() {
           <span className="badge badge-violet">AI Powered</span>
         </div>
         <div style={{ display: 'flex', gap: 16, alignItems: 'flex-end', flexWrap: 'wrap' }}>
-          <div className="form-group" style={{ flex: 1, minWidth: '300px' }}>
+          <div className="form-group" style={{ flex: 1, minWidth: '200px' }}>
             <label className="form-label">Debate Topic</label>
             <input className="form-input" placeholder="e.g. Should we prioritize Bayesian optimization over genetic algorithms for this problem?" value={topic}
               onChange={e => setTopic(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && !agentDebating && handleDebate()} />
           </div>
-          <div className="form-group" style={{ flex: 1, minWidth: '300px' }}>
+          <div className="form-group" style={{ flex: 1, minWidth: '200px' }}>
             <label className="form-label">Lead Scientist Directive (Optional)</label>
             <input className="form-input" placeholder="e.g. Make sure to consider the ethical implications." value={directive}
               onChange={e => setDirective(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && !agentDebating && handleDebate()} />
           </div>
-          <motion.button className={`btn btn-primary ${agentDebating ? 'btn-loading' : ''}`} style={{ marginBottom: 16 }} onClick={handleDebate} disabled={agentDebating} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <motion.button className={`btn btn-primary ${agentDebating ? 'btn-loading' : ''}`} style={{ alignSelf: 'flex-end' }} onClick={handleDebate} disabled={agentDebating} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             {agentDebating ? '⏳ Debating…' : '🗣 Start Debate'}
           </motion.button>
         </div>

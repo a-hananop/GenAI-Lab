@@ -373,10 +373,62 @@ body::before {
 .empty-state-title { font-size: 18px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
 .empty-state-desc { font-size: 14px; color: var(--text-muted); }
 
+/* ===== HERO BANNER ===== */
+.hero-banner {
+  background: linear-gradient(135deg, rgba(139,92,246,0.15) 0%, rgba(6,182,212,0.08) 100%);
+  border: 1px solid rgba(139,92,246,0.25);
+  border-radius: 20px;
+  padding: 32px 36px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===== RESPONSIVE FORM GRIDS ===== */
+.hyp-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.exp-form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 16px;
+  align-items: end;
+}
+.report-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.report-card-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.analysis-select-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.analysis-select-row .form-group { flex: 1; min-width: 200px; }
+.analysis-select-row .btn { flex-shrink: 0; }
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
-  /* Let auto-fit handle most grids */
+  .hyp-form-grid { grid-template-columns: 1fr 1fr; }
+  .exp-form-grid { grid-template-columns: 1fr 1fr; }
 }
+
 @media (max-width: 768px) {
   :root { --sidebar-w: 0px; }
   .sidebar-overlay {
@@ -395,18 +447,78 @@ body::before {
   .sidebar.open { transform: translateX(0); }
   
   .main-content { margin-left: 0; max-width: 100vw; }
-  .page-content { padding: 20px 16px; overflow-x: hidden; }
+  .page-content { padding: 16px 12px; overflow-x: hidden; }
+  .hero-banner { padding: 20px 16px; margin-bottom: 20px; }
   .stat-grid, .grid-2, .grid-3, .grid-4, .grid-auto { grid-template-columns: 1fr; }
-  
-  /* Flexbox Responsive Overrides */
+
+  /* Page title */
+  .page-title { font-size: 20px; }
+  .page-title-icon { font-size: 24px; }
+  .page-desc { font-size: 13px; }
+
+  /* Cards */
+  .card { padding: 16px; }
+  .card-glass { padding: 16px; }
+  .card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .stat-value { font-size: 26px; }
+
+  /* Buttons */
+  .btn-lg { padding: 10px 16px !important; font-size: 13px !important; }
+  .hero-actions { width: 100%; }
+  .hero-actions .btn { flex: 1; justify-content: center; }
+
+  /* Form grids collapse to single column */
+  .hyp-form-grid { grid-template-columns: 1fr; }
+  .exp-form-grid { grid-template-columns: 1fr; }
+
+  /* Header */
   .header { padding: 0 16px; }
   .header-title h1 { font-size: 16px; }
   .header-title p { display: none; }
   .header-actions { flex-wrap: wrap; }
   .header-badge { font-size: 10px; padding: 4px 8px; }
-  
-  .card-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+
+  /* Report header */
+  .report-card-header { flex-direction: column; align-items: flex-start; }
+  .report-card-actions { width: 100%; }
+  .report-card-actions .btn { flex: 1; justify-content: center; }
+
+  /* Debate messages */
+  .debate-message { flex-direction: row; flex-wrap: wrap; }
+
+  /* Agent grid */
+  .agent-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Support bot */
+  .support-bot-trigger { bottom: 20px !important; right: 16px !important; }
+  .support-bot-window {
+    width: calc(100vw - 24px) !important;
+    right: 12px !important;
+    bottom: 88px !important;
+    height: 460px !important;
+  }
+
+  /* Tables: make scrollable */
+  .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Responsive flex */
   .responsive-flex { flex-direction: column !important; align-items: stretch !important; }
+}
+
+@media (max-width: 480px) {
+  .page-content { padding: 12px 10px; }
+  .page-title { font-size: 17px; }
+  .card { padding: 12px; }
+  .stat-value { font-size: 22px; }
+  .agent-grid { grid-template-columns: 1fr; }
+  .btn { font-size: 13px; padding: 8px 14px; }
+  .hero-actions .btn { font-size: 12px; padding: 9px 12px; }
+  .page-header { margin-bottom: 20px; }
+  .support-bot-window {
+    width: calc(100vw - 16px) !important;
+    right: 8px !important;
+    height: 420px !important;
+  }
 }
 
 /* ===== SUPPORT BOT ===== */

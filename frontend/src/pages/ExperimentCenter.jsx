@@ -38,7 +38,7 @@ export default function ExperimentCenter() {
           <div className="card-title" style={{display: 'flex', alignItems: 'center', gap: 8}}><Beaker size={20} color="#8B5CF6"/> Design New Experiment</div>
           <span className="badge badge-cyan">Auto-Design</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr auto', gap: 16, alignItems: 'end' }}>
+        <div className="exp-form-grid">
           <div className="form-group">
             <label className="form-label">Select Hypothesis</label>
             <select className="form-select" value={form.hypothesis_id} onChange={e => setForm(f => ({ ...f, hypothesis_id: e.target.value }))}>

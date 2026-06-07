@@ -29,20 +29,20 @@ export default function Dashboard() {
     <div className="fade-in">
       {/* Hero Banner */}
       <motion.div
-        style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.15) 0%, rgba(6,182,212,0.08) 100%)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: 20, padding: '32px 36px', marginBottom: 32, position: 'relative', overflow: 'hidden' }}
+        className="hero-banner"
         initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}
       >
         <div style={{ position: 'absolute', top: -40, right: -40, width: 200, height: 200, background: 'radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 70%)', borderRadius: '50%' }} />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
           <div>
-            <h2 style={{ fontSize: 26, fontWeight: 800, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <h2 style={{ fontSize: 'clamp(18px, 4vw, 26px)', fontWeight: 800, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
               <Telescope size={28} color="#8B5CF6" /> Autonomous AI Research Laboratory
             </h2>
             <p style={{ color: 'var(--text-muted)', fontSize: 14, maxWidth: 500 }}>
               GenAI Lab continuously generates hypotheses, designs experiments, runs simulations, and improves itself using advanced AI + 10 specialized agents.
             </p>
           </div>
-          <div style={{ display: 'flex', gap: 12 }}>
+          <div className="hero-actions">
             <motion.button
               className={`btn btn-primary btn-lg ${loopRunning ? 'btn-loading' : ''}`}
               onClick={handleLoop} disabled={loopRunning} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}

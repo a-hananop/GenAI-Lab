@@ -45,8 +45,8 @@ export default function AnalysisInsights() {
 
       <motion.div className="card" style={{ marginBottom: 28 }} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         <div className="card-header"><div className="card-title" style={{display: 'flex', alignItems: 'center', gap: 8}}><Search size={20} color="#8B5CF6"/> Analyze Experiment</div></div>
-        <div style={{ display: 'flex', gap: 16, alignItems: 'flex-end' }}>
-          <div className="form-group" style={{ flex: 1 }}>
+        <div className="analysis-select-row">
+          <div className="form-group">
             <label className="form-label">Select Experiment</label>
             <select className="form-select" value={selectedExp} onChange={e => setSelectedExp(e.target.value)}>
               <option value="">-- Choose experiment --</option>
@@ -64,7 +64,7 @@ export default function AnalysisInsights() {
       {analysis && !loading && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           {/* Result Banner */}
-          <div style={{ padding: '20px 24px', borderRadius: 16, background: analysis.success ? 'rgba(16,185,129,0.1)' : 'rgba(244,63,94,0.1)', border: `1px solid ${analysis.success ? 'rgba(16,185,129,0.3)' : 'rgba(244,63,94,0.3)'}`, marginBottom: 24, display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ padding: '20px 24px', borderRadius: 16, background: analysis.success ? 'rgba(16,185,129,0.1)' : 'rgba(244,63,94,0.1)', border: `1px solid ${analysis.success ? 'rgba(16,185,129,0.3)' : 'rgba(244,63,94,0.3)'}`, marginBottom: 24, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 36, display: 'flex' }}>{analysis.success ? <CheckCircle2 size={36} color="#10B981" /> : <AlertTriangle size={36} color="#F43F5E" />}</span>
             <div>
               <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>{analysis.experiment_name}</div>

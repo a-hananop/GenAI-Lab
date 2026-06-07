@@ -30,12 +30,12 @@ export default function ResearchReports() {
       </div>
 
       <motion.div className="card" style={{ marginBottom: 28 }} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="report-card-header">
           <div>
             <div className="card-title" style={{display: 'flex', alignItems: 'center', gap: 8}}><FileText size={20} color="#8B5CF6"/> Generate Research Report</div>
             <div className="card-subtitle">The AI synthesizes all research data into a structured report</div>
           </div>
-          <div style={{ display: 'flex', gap: '12px' }}>
+          <div className="report-card-actions">
             <motion.button className={`btn btn-primary btn-lg ${loading ? 'btn-loading' : ''}`} style={{display: 'flex', alignItems: 'center', gap: 8}} onClick={handleGenerate} disabled={loading} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               {loading ? <><Loader size={18} className="spin" /> Generating…</> : <><FileText size={18} /> Generate Report</>}
             </motion.button>
