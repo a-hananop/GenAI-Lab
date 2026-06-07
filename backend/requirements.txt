@@ -4,9 +4,9 @@ sqlalchemy==2.0.30
 pydantic==2.7.1
 pydantic-settings==2.2.1
 groq
-numpy==1.26.4
-scipy==1.13.0
-scikit-learn==1.4.2
+numpy
+scipy
+scikit-learn
 networkx==3.3
 apscheduler==3.10.4
 python-multipart==0.0.9
